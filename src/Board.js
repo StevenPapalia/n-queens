@@ -62,14 +62,14 @@
     },
 
 
-/*
+    /*
          _             _     _
      ___| |_ __ _ _ __| |_  | |__   ___ _ __ ___ _
     / __| __/ _` | '__| __| | '_ \ / _ \ '__/ _ (_)
     \__ \ || (_| | |  | |_  | | | |  __/ | |  __/_
     |___/\__\__,_|_|   \__| |_| |_|\___|_|  \___(_)
 
- */
+    */
     /*=========================================================================
     =                 TODO: fill in these Helper Functions                    =
     =========================================================================*/
@@ -79,12 +79,36 @@
     //
     // test if a specific row on this board contains a conflict
     hasRowConflictAt: function(rowIndex) {
-      return false; // fixme
+      // create a check variable to update if row has something present
+      var check = 0;
+      // for each item in this[att][index]
+      for (var i = 0; i < this['attributes'][rowIndex].length; i++) {
+        // if item contains more than one one
+        if (this['attributes'][rowIndex][i] !== 0) {
+          check++;
+        }
+        // if row has more that 1 than it has a row conflict
+        if (check > 1) {
+          return true;
+        }
+      }
+      // if loop is complete and check is not > 1 then no conflict is present
+      return false;
     },
 
     // test if any rows on this board contain conflicts
     hasAnyRowConflicts: function() {
-      return false; // fixme
+      // for each row
+      for (var key in this['attributes']) {
+        if (Number.parseInt(key) >= 0) {
+          // if row has conflict return true
+          if (this.hasRowConflictAt(Number.parseInt(key))) {
+            return true;
+          }
+        }
+      }
+      // if not rows have conflict return false
+      return false;
     },
 
 
