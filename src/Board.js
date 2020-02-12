@@ -118,12 +118,29 @@
     //
     // test if a specific column on this board contains a conflict
     hasColConflictAt: function(colIndex) {
-      return false; // fixme
+      var colCheck = 0;
+      for (var i = 0; i < this['attributes'][0].length; i++){
+        if (this['attributes'][i][colIndex] !== 0) {
+          colCheck++;
+          if (colCheck > 1) {
+            return true;
+          }
+        }
+      }
+      return false;
     },
 
     // test if any columns on this board contain conflicts
     hasAnyColConflicts: function() {
-      return false; // fixme
+      // for each column
+      var index = 0;
+      for (var i = 0; i < this['attributes'][0].length; i++) {
+        if (this.hasColConflictAt(i)) {
+          return true;
+        }
+      }
+      // if not rows have conflict return false
+      return false;
     },
 
 
