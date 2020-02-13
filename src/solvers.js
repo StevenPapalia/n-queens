@@ -18,50 +18,31 @@
 window.findNRooksSolution = function(n) {
 
 
-  // var solution = new Board({n:n});
-  // var addRookToRow = function(currentRow) {
-  //   if (currentRow === n - 1) {
-  //     return;
-  //   }
-  //   for (var column = 0; column < n; column++) {
-  //     board.rows()[currentRow][column] = 1;
-  //     // check if conflict occurs
-  //     for (var colCheck = column; colCheck < n + 1; colCheck++) {
-  //       // if it does 
-  //       if(board.hasAnyColConflicts()) {
-  //         // remove conflict
-  //         board.rows()[currentRow][colCheck] = 0;
-  //         // if it is a valid square add 1 there
-  //         if (colCheck < n) {
-  //           board.rows()[currentRow][colCheck + 1] = 1;
-  //         }
-  //       } else {
-  //         break;
-  //       }
-  //     }
-  //     addRookToRow(currentRow + 1);
-  //   }
-  //   return solution;
+  var board = new Board({n: n});
+  var rookCount = 0;
 
-  // }
-
-
-
-
-
-  var solution = [];
-  for (var i = 0; i < n; i++) {
-    solution.push([]);
-    for (var j = 0; j < n; j++) {
-      if (i === j) {
-        solution[i].push(1);
-      } else {
-        solution[i].push(0); 
-      }
+  var addRookToRow = function(currentRow) {
+    if (rookCount === n) { return; }
+    // add rook to board[row][column]
+    for (var column = 0; column < n; column++) {
+      board.rows()[currentRow][column] = 1;
+      // check if conflict occurs
+      var i = column;
+      while (board.hasAnyColConflicts() || board.hasAnyRowConflicts()) {
+        // remove conflict
+        board.rows()[currentRow][column] = 0;
+        // check board.rows[row][colcheck+1] is a valid square add 1 there
+        if (board.rows()[currentRow][i + 1]) {
+          board.rows()[currentRow][i + 1] = 1;
+        }
+        i++;
+      } 
     }
-  }
-  console.log('Single solution for ' + n + ' rooks:', JSON.stringify(solution));
-  return solution;
+    rookCount++;
+    addRookToRow(currentRow + 1);
+  };
+  addRookToRow(0);
+  return board.rows();
 };
 
 // return the number of nxn chessboards that exist, with n rooks placed such that none of them can attack each other
@@ -85,10 +66,10 @@ window.countNRooksSolutions = function(n) {
     }
   };
   addRookToRow(0);
-  console.log(solutionCount + 'num');
-  console.log(board);
+  // console.log(solutionCount + 'num');
+  // console.log(board);
   console.log('Number of solutions for ' + n + ' rooks:', solutionCount);
-  return solutionCount;
+  return solutionCount; //.rows();
 };
 
 // return a matrix (an array of arrays) representing a single nxn chessboard, with n queens placed such that none of them can attack each other
