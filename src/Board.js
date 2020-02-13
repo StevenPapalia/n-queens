@@ -82,9 +82,9 @@
       // create a check variable to update if row has something present
       var check = 0;
       // for each item in this[att][index]
-      for (var i = 0; i < this['attributes'][rowIndex].length; i++) {
+      for (var i = 0; i < this.rows()[rowIndex].length; i++) {
         // if item contains more than one one
-        if (this['attributes'][rowIndex][i] !== 0) {
+        if (this.rows()[rowIndex][i]) {
           check++;
         }
         // if row has more that 1 than it has a row conflict
@@ -99,12 +99,10 @@
     // test if any rows on this board contain conflicts
     hasAnyRowConflicts: function() {
       // for each row
-      for (var key in this['attributes']) {
-        if (Number.parseInt(key) >= 0) {
-          // if row has conflict return true
-          if (this.hasRowConflictAt(Number.parseInt(key))) {
-            return true;
-          }
+      for (var row in this.rows()) {
+        // if row has conflict return true
+        if (this.hasRowConflictAt(row)) {
+          return true;
         }
       }
       // if not rows have conflict return false
@@ -118,28 +116,33 @@
     //
     // test if a specific column on this board contains a conflict
     hasColConflictAt: function(colIndex) {
+      // creaate a check to keep count if 2 non zeros are on the same column
       var colCheck = 0;
-      for (var i = 0; i < this['attributes'][0].length; i++){
-        if (this['attributes'][i][colIndex] !== 0) {
+      // for each matrix
+      for (var i = 0; i < this.rows().length; i++){
+        // if each row at column i if element at this position is not zero count++
+        if (this.rows()[i][colIndex]) {
           colCheck++;
+          // if more than two non zeros then there is a conflict
           if (colCheck > 1) {
             return true;
           }
         }
       }
+      // if no conflict return false
       return false;
     },
 
     // test if any columns on this board contain conflicts
     hasAnyColConflicts: function() {
-      // for each column
-      var index = 0;
-      for (var i = 0; i < this['attributes'][0].length; i++) {
+      // for each column (this function just checks n, it doesnt actually check columns)
+      for (var i = 0; i < this.rows().length; i++) {
+        // if column has conflict then its bad
         if (this.hasColConflictAt(i)) {
           return true;
         }
       }
-      // if not rows have conflict return false
+      // if not columms have  no conflicts
       return false;
     },
 
@@ -149,12 +152,42 @@
     // --------------------------------------------------------------
     //
     // test if a specific major diagonal on this board contains a conflict
-    hasMajorDiagonalConflictAt: function(majorDiagonalColumnIndexAtFirstRow) {
-      return false; // fixme
+    hasMajorDiagonalConflictAt: function(row, column) {
+      var check = 0;
+      while (row < this.rows().length && column < this.rows().length) {
+        // if down 1 and right 1 is defined and unequal to 0
+        if (this.rows()[row][column]) {
+          check++;
+        } 
+        // if there is more than 1 then there is a conflict
+        if (check > 1) {
+          return true;
+        }
+        // check down 1 and right 1
+        row++;
+        column++;
+      }
+      // if check never reaches 2 then there is no confict
+      return false;
     },
 
     // test if any major diagonals on this board contain conflicts
     hasAnyMajorDiagonalConflicts: function() {
+      // throw in starting position
+      // pass in all of row 0 except for row1[n]
+      var row = 0;
+      for (var i = 0; i < this.rows()[0].length - 1; i++) {
+        if (this.hasMajorDiagonalConflictAt(row, i)) {
+          return true;
+        }
+      }
+      // pass in all of column 0 except column1[0] and column1[n]
+      var column = 0;
+      for (var i = 1; i < this.rows().length - 1; i++) {
+        if (this.hasMajorDiagonalConflictAt(i, column)) {
+          return true;
+        }
+      }
       return false; // fixme
     },
 
