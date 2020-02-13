@@ -119,7 +119,7 @@
       // creaate a check to keep count if 2 non zeros are on the same column
       var colCheck = 0;
       // for each matrix
-      for (var i = 0; i < this.rows().length; i++){
+      for (var i = 0; i < this.rows().length; i++) {
         // if each row at column i if element at this position is not zero count++
         if (this.rows()[i][colIndex]) {
           colCheck++;
@@ -233,7 +233,7 @@
           return true;
         }
       }
-      return false; // fixme
+      return false;
     }
 
     /*--------------------  End of Helper Functions  ---------------------*/
